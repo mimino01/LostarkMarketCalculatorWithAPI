@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "lofty-digit-433703-n1",
+  "private_key_id": "f7e9bc4aa1f1e8bd9e4406b9e32fd6830b96db69",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC9IbotYF1rMKQm\nbr59+id4h2oadN8mV8kfyBN3Cn78uu72MUJDQbIrrqhdM5u7HIYtCRvFGYwMdHGC\nZ1GZ71ZacXmIuiiQZTkV1SteqXeJ2rRN0j5WF/pnTkbYMuZqEARQyYg81QNpzSEr\ndo8ob7PolTpeRENA8MQlUt1W9mcUt944p8Ke+pOqIQfPxDGpHIbR4FYA+Cgr6rcM\naHo8ahWixY8nZS7onh3Q2jG6J0mQwBsbRRxnFO1mcbIaZAnwE1xlGhY9fPv7f0OU\nFBG84LZs5ChDf3M0gCEmc55nWlJ3ugcToR6OIAZqL3+QXuAiP4DoaGaZSQrHKOpH\nupuSmqXNAgMBAAECggEAHkvCyPYAwOTfxpBCz2c831/BrU8/V6MEQqUICS+TO+St\n1p35YVCqu7iUm6lirsxY6enlmuMGvhABBsSKG8Bs8rvunepECS1NwaON+PHohhqU\ne0rMVXot0FKHoqY0ppS+PDqsKiJtE4uaXp31PKL4DK+q0+LXaxWmNdxaPE3oITc0\nK2mDaykaOQ9yaJB64FvdDGR7YOeBhTCtVqL6D7A8SRUXDnoz6UM6znU9QyXI/LA2\nYufSMeVeJk5Z2RJFMVOhLu0SSzwwzfVAAzUp0o8ob4sbZsuRhwBzp3YkS40bIyQz\njkK88x/zQtsR7GBcrLifQ1xAEeEaQ9fwaexZi6WzuQKBgQDqri6fjmXyrgAC+1jV\ny1SxEtT3tSWAZG8I5cHq7Z+R04iC2YXnVRTtsfF2XUUf4zb/UWdS+nWNWR1320ly\ndjaE8baqTmIUl6KzPOVjXPOSI+rlH0jcq1jJKJcclTolfXHZl5X8kNAEgf83FxHl\nYV9RMx5BHC2hmuOwr3zHe6v77wKBgQDOUD+ElzmjB4AvNi8XXwGYMNbMb77kh/ps\neRD2Jma6ypJYclKENkHue3nIw/XQdrx8t+na8KgnJN+QJYt9lp4cAm2Vxa/AqYFp\nQ3+2uKp++3zGb5cANYL4AxW4vqG+dMM13KbtXmTfQoE5asKKjaJkxYrUuG7a1eRC\n9k1yvgpuAwKBgEngkW7LLg7Kddh6dYnAG6YurnpYPTkA5O9hHL2vFleaxtOiVIPx\nhcgaB1BipjsWlR6k6qj1jYH0ttEfaCyvSBRr3zwXtsqSvbY9Cl1QSqELy4tbYN2O\n10FkFMX7uDVLG0cLcDz0/Xcd0VDvY0PZdl8if3ixvS+tidX6OIa3yPljAoGBAI07\nE/AxEWyP0uj+v4fRKqdDL5dtG5EXoI8m5TyLlyFhUIMpZ2FIPyQA9KJBuwFEds0t\nnPGacpGxRTVI7k8/juZ/pwKy/Bf4MTWc1k1/5n7cq1Kvyv+CojAi9HiuTsyw43z4\nmnC9gHHw9cMXWSs9v6AaNmpeAszdRM+uCeB1RXB/AoGBAIR8jU3n0NRiPTdAHxC2\nLAMw2Daj9GHkgOIwOiJ427iYdbO5s7kRUA4Qvdzw6ZDKSlloWol/gx0sfMJl+YMQ\naYlj6sOWjzLcsjixmpT3/VX0yQM5TNqZ6opQJCTYRcT/9qwNxJP94u7SrPwKea/Q\nYBeOluWgl2Unk72HE4qIvIEB\n-----END PRIVATE KEY-----\n",
+  "client_email": "lostark-google-connect@lofty-digit-433703-n1.iam.gserviceaccount.com",
+  "client_id": "105706266370488253691",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/lostark-google-connect%40lofty-digit-433703-n1.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
