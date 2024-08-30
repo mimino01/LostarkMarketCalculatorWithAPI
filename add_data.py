@@ -1,5 +1,7 @@
 import time
 import tkinter as tk
+import os
+import sys
 
 from httplib2 import Http
 from googleapiclient.discovery import build
@@ -14,6 +16,13 @@ SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 SPREADSHEET_ID = '1QpKxz3ghKcjthG4j8FvOmpYmVMLaEnTrpEWef58IkF8'
 CURRENT_TIME = ""
 
+def get_keyfile_path(filename):
+    if getattr(sys, 'frozen', False):
+        # PyInstaller로 패키징된 경우
+        return os.path.join(sys._MEIPASS, filename)
+    else:
+        # 개발 모드일 때
+        return os.path.join(os.path.dirname(__file__), filename)
 
 def main():
     if(item() == list()):
@@ -34,8 +43,9 @@ def main():
                 c_time
             ]
         }
+        keyfile_path = get_keyfile_path('lofty-digit-433703-n1-f7e9bc4aa1f1.json')
         # json 파일로 서비스 계정 credential 정의
-        credentials = ServiceAccountCredentials.from_json_keyfile_name('lofty-digit-433703-n1-f7e9bc4aa1f1.json', SCOPES)
+        credentials = ServiceAccountCredentials.from_json_keyfile_name(keyfile_path, SCOPES)
         http_auth = credentials.authorize(Http())
         service = build('sheets', 'v4', http=http_auth)
         # 업데이트 요청 및 실행

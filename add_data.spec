@@ -5,7 +5,7 @@ a = Analysis(
     ['add_data.py'],
     pathex=[],
     binaries=[],
-    datas=[],
+    datas=[('E:\\로스트아크API연동계산기\\lofty-digit-433703-n1-f7e9bc4aa1f1.json', '.')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
