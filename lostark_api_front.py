@@ -11,13 +11,14 @@ categoryCord = [90200, 90300, 90400, 90500, 90600, 90700]
 items = list()
 url = 'https://developer-lostark.game.onstove.com/markets/items'
 
-# 예외 처리를 추가한 코드
+# 생활 데이터 받아오기
 for temp in categoryCord:
     json_data = {
         'Sort': 'GRADE',
         'CategoryCode': temp,
         'SortCondition': 'ASC',
     }
+    # 예외 처리
     try:
         response = requests.post(url, headers=headers, json=json_data)
         response.raise_for_status()  # HTTP 에러가 발생했는지 확인
