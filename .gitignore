@@ -3,3 +3,5 @@ dist/test.exe
 test.py
 test.spec
 lofty-digit-433703-n1-f7e9bc4aa1f1.json
+data_test.py
+get_data.py

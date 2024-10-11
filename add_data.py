@@ -26,8 +26,11 @@ def main():
 
     for attempt in range(retry_count):
         try:
-            if(item() == list()):
-                return "not connect server"
+            item()
+            item_data = item()
+            if item_data[0] == -1:
+                print("오류")
+                return item_data[1]
             else:
                 name = []
                 cPrice = []
@@ -36,7 +39,7 @@ def main():
                 for x in item():
                     for y in x:
                         name.append(y['Name'])
-                        cPrice.append(y['CurrentMinPrice'])
+                        cPrice.append(y['RecentPrice'])
                 body = {
                     'values': [
                         name,
@@ -44,7 +47,6 @@ def main():
                         c_time
                     ]
                 }
-                print(y)
                 keyfile_path = get_keyfile_path('lofty-digit-433703-n1-f7e9bc4aa1f1.json')
                 credentials = ServiceAccountCredentials.from_json_keyfile_name(keyfile_path, SCOPES)
                 http_auth = credentials.authorize(Http(timeout=30))
