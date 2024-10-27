@@ -17,16 +17,16 @@ def fetch_items(json_data):
         jsonObject = response.json()
         return jsonObject.get("Items", [])  # 'Items'가 없을 때 빈 리스트 반환
     except requests.exceptions.HTTPError as http_err:
-        print(f"HTTP 오류 발생: {http_err}")
+        # print(f"HTTP 오류 발생: {http_err}")
         return [-1,f"HTTP 오류 발생: {http_err}"]  # 오류 발생 시 오류 메시지 반환
     except requests.exceptions.RequestException as req_err:
-        print(f"요청 오류 발생: {req_err}")
+        # print(f"요청 오류 발생: {req_err}")
         return [-1,f"요청 오류 발생: {req_err}"]  # 오류 발생 시 오류 메시지 반환
     except ValueError as json_err:
-        print(f"JSON 파싱 오류 발생: {json_err}")
+        # print(f"JSON 파싱 오류 발생: {json_err}")
         return [-1,f"파싱 오류 발생: {json_err}"]  # 오류 발생 시 오류 메시지 반환
     except Exception as err:
-        print(f"알 수 없는 오류 발생: {err}")
+        # print(f"알 수 없는 오류 발생: {err}")
         return [-1,f"알 수 없는 오류 발생: {err}"]  # 오류 발생 시 오류 메시지 반환
 
 # 생활 데이터 받아오기 함수

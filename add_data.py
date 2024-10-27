@@ -2,17 +2,40 @@ import time
 import tkinter as tk
 import os
 import sys
+from tokenize import Double
+from xmlrpc.client import Boolean
 
 from httplib2 import Http
 from googleapiclient.discovery import build
 from oauth2client.service_account import ServiceAccountCredentials
 from lostark_api_front import item
+from datetime import date, datetime
 
 MESSAGE = []
 ERROR = []
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 SPREADSHEET_ID = '1QpKxz3ghKcjthG4j8FvOmpYmVMLaEnTrpEWef58IkF8'
 CURRENT_TIME = ""
+DATA_LIMIT = True
+
+def set_today_data_recoding():
+    values = get_data('통계!A:E')
+    today = date.today().strftime("%m/%d")
+    if not values:
+        print('No data found.')
+    else:
+        for row in values:
+            print(row)
+        body = {
+            'values': [
+                [
+                    today,
+                    float(values[0][3]),
+                    float(values[0][4])
+                ]
+            ]
+        }
+        insert_data(f'통계!A{len(values)+1}',body)
 
 def get_keyfile_path(filename):
     if getattr(sys, 'frozen', False):
@@ -20,42 +43,69 @@ def get_keyfile_path(filename):
     else:
         return os.path.join(os.path.dirname(__file__), filename)
 
+def insert_data(path, body):
+    keyfile_path = get_keyfile_path('lofty-digit-433703-n1-f7e9bc4aa1f1.json')
+    credentials = ServiceAccountCredentials.from_json_keyfile_name(keyfile_path, SCOPES)
+    http_auth = credentials.authorize(Http(timeout=30))
+    service = build('sheets', 'v4', http=http_auth)
+    request = service.spreadsheets().values().update(spreadsheetId=SPREADSHEET_ID,
+                                                     range=path,
+                                                     valueInputOption='USER_ENTERED',
+                                                     body=body)
+    request.execute()
+
+def get_data(path):
+    keyfile_path = get_keyfile_path('lofty-digit-433703-n1-f7e9bc4aa1f1.json')
+    credentials = ServiceAccountCredentials.from_json_keyfile_name(keyfile_path, SCOPES)
+    http_auth = credentials.authorize(Http(timeout=30))
+    service = build('sheets', 'v4', http=http_auth)
+    result = service.spreadsheets().values().get(spreadsheetId=SPREADSHEET_ID, range=path).execute()
+    values = result.get('values', [])
+    return values
+
 def main():
+    global DATA_LIMIT
     retry_count = 3  # 최대 3번 재시도
     retry_delay = 60  # 재시도 간격 (초)
 
     for attempt in range(retry_count):
         try:
+            hour = datetime.now().hour
+            print(hour,DATA_LIMIT,type(hour))
+            if (hour == 0)&DATA_LIMIT:
+                DATA_LIMIT=False
+                set_today_data_recoding()
+            elif (hour == 1)&(not DATA_LIMIT):
+                DATA_LIMIT=True
+
             item()
             item_data = item()
             if item_data[0] == -1:
-                print("오류")
+                # print("오류")
                 return item_data[1]
             else:
                 name = []
                 cPrice = []
                 c_time = []
+                yPrice = []
+                pdProfit = []
                 c_time.append(CURRENT_TIME)
                 for x in item():
                     for y in x:
                         name.append(y['Name'])
                         cPrice.append(y['RecentPrice'])
+                        yPrice.append(y['YDayAvgPrice'])
+                        pdProfit.append(y['RecentPrice']/y['YDayAvgPrice']*100)
                 body = {
                     'values': [
                         name,
                         cPrice,
+                        yPrice,
+                        pdProfit,
                         c_time
                     ]
                 }
-                keyfile_path = get_keyfile_path('lofty-digit-433703-n1-f7e9bc4aa1f1.json')
-                credentials = ServiceAccountCredentials.from_json_keyfile_name(keyfile_path, SCOPES)
-                http_auth = credentials.authorize(Http(timeout=30))
-                service = build('sheets', 'v4', http=http_auth)
-                request = service.spreadsheets().values().update(spreadsheetId=SPREADSHEET_ID,
-                                                                 range='데이터!B1',
-                                                                 valueInputOption='RAW',
-                                                                 body=body)
-                request.execute()
+                insert_data('데이터!B1',body)
                 return "connect and execute"
 
         except Exception as e:
