@@ -16,7 +16,7 @@ ERROR = []
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 SPREADSHEET_ID = '1QpKxz3ghKcjthG4j8FvOmpYmVMLaEnTrpEWef58IkF8'
 CURRENT_TIME = ""
-DATA_LIMIT = True
+is_data_recording_enabled = True
 
 def set_today_data_recoding():
     values = get_data('통계!A:E')
@@ -64,21 +64,20 @@ def get_data(path):
     return values
 
 def main():
-    global DATA_LIMIT
+    global is_data_recording_enabled
     retry_count = 3  # 최대 3번 재시도
     retry_delay = 60  # 재시도 간격 (초)
 
     for attempt in range(retry_count):
         try:
             hour = datetime.now().hour
-            print(hour,DATA_LIMIT,type(hour))
-            if (hour == 0)&DATA_LIMIT:
-                DATA_LIMIT=False
+            print(hour,is_data_recording_enabled,type(hour))
+            if (hour == 0)&is_data_recording_enabled:
+                is_data_recording_enabled=False
                 set_today_data_recoding()
-            elif (hour == 1)&(not DATA_LIMIT):
-                DATA_LIMIT=True
+            elif (hour == 1)&(not is_data_recording_enabled):
+                is_data_recording_enabled=True
 
-            item()
             item_data = item()
             if item_data[0] == -1:
                 # print("오류")
