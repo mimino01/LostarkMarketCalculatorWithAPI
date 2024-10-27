@@ -18,14 +18,14 @@ SPREADSHEET_ID = '1QpKxz3ghKcjthG4j8FvOmpYmVMLaEnTrpEWef58IkF8'
 CURRENT_TIME = ""
 is_data_recording_enabled = True
 
-def set_today_data_recoding():
+def set_today_data_recording():
     values = get_data('통계!A:E')
     today = date.today().strftime("%m/%d")
     if not values:
         print('No data found.')
     else:
-        for row in values:
-            print(row)
+        # for row in values:
+        #     print(row)
         body = {
             'values': [
                 [
@@ -71,10 +71,10 @@ def main():
     for attempt in range(retry_count):
         try:
             hour = datetime.now().hour
-            print(hour,is_data_recording_enabled,type(hour))
+            # print(hour,is_data_recording_enabled,type(hour))
             if (hour == 0)&is_data_recording_enabled:
                 is_data_recording_enabled=False
-                set_today_data_recoding()
+                set_today_data_recording()
             elif (hour == 1)&(not is_data_recording_enabled):
                 is_data_recording_enabled=True
 
@@ -89,7 +89,7 @@ def main():
                 yPrice = []
                 pdProfit = []
                 c_time.append(CURRENT_TIME)
-                for x in item():
+                for x in item_data:
                     for y in x:
                         name.append(y['Name'])
                         cPrice.append(y['RecentPrice'])
