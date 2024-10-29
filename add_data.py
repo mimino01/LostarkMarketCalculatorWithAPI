@@ -16,9 +16,9 @@ ERROR = []
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 SPREADSHEET_ID = '1QpKxz3ghKcjthG4j8FvOmpYmVMLaEnTrpEWef58IkF8'
 CURRENT_TIME = ""
-is_data_recording_enabled = True
+DATA_LIMIT = True
 
-def set_today_data_recording():
+def set_all_stuff_values():
     values = get_data('통계!A:E')
     today = date.today().strftime("%m/%d")
     if not values:
@@ -37,17 +37,44 @@ def set_today_data_recording():
         }
         insert_data(f'통계!A{len(values)+1}',body)
 
+def set_life_earn_values():
+    values = get_data('생활계산기!BL:BN')
+    # for a in values:
+    #     print(a)
+    # values = get_data('생활계산기!BN6:BN8')
+    today = date.today().strftime("%m/%d")
+    if not values:
+        print('No data found.')
+    else:
+        body = {
+            'values': [
+                [
+                    today,
+                    values[5][0],
+                    values[7][0]
+                ]
+            ]
+        }
+        insert_data(f'생활계산기!BL{len(values)+1}',body)
+
+def set_today_data_recoding():
+    set_all_stuff_values()
+    set_life_earn_values()
+
 def get_keyfile_path(filename):
     if getattr(sys, 'frozen', False):
         return os.path.join(sys._MEIPASS, filename)
     else:
         return os.path.join(os.path.dirname(__file__), filename)
 
-def insert_data(path, body):
+def get_service():
     keyfile_path = get_keyfile_path('lofty-digit-433703-n1-f7e9bc4aa1f1.json')
     credentials = ServiceAccountCredentials.from_json_keyfile_name(keyfile_path, SCOPES)
     http_auth = credentials.authorize(Http(timeout=30))
-    service = build('sheets', 'v4', http=http_auth)
+    return build('sheets', 'v4', http=http_auth)
+
+def insert_data(path, body):
+    service = get_service()
     request = service.spreadsheets().values().update(spreadsheetId=SPREADSHEET_ID,
                                                      range=path,
                                                      valueInputOption='USER_ENTERED',
@@ -55,28 +82,25 @@ def insert_data(path, body):
     request.execute()
 
 def get_data(path):
-    keyfile_path = get_keyfile_path('lofty-digit-433703-n1-f7e9bc4aa1f1.json')
-    credentials = ServiceAccountCredentials.from_json_keyfile_name(keyfile_path, SCOPES)
-    http_auth = credentials.authorize(Http(timeout=30))
-    service = build('sheets', 'v4', http=http_auth)
+    service = get_service()
     result = service.spreadsheets().values().get(spreadsheetId=SPREADSHEET_ID, range=path).execute()
     values = result.get('values', [])
     return values
 
 def main():
-    global is_data_recording_enabled
+    global DATA_LIMIT
     retry_count = 3  # 최대 3번 재시도
     retry_delay = 60  # 재시도 간격 (초)
 
     for attempt in range(retry_count):
         try:
             hour = datetime.now().hour
-            # print(hour,is_data_recording_enabled,type(hour))
-            if (hour == 0)&is_data_recording_enabled:
-                is_data_recording_enabled=False
-                set_today_data_recording()
-            elif (hour == 1)&(not is_data_recording_enabled):
-                is_data_recording_enabled=True
+            # print(hour,DATA_LIMIT,type(hour))
+            if (hour == 2)&DATA_LIMIT:
+                DATA_LIMIT=False
+                set_today_data_recoding()
+            elif (hour == 3)&(not DATA_LIMIT):
+                DATA_LIMIT=True
 
             item_data = item()
             if item_data[0] == -1:
@@ -89,7 +113,7 @@ def main():
                 yPrice = []
                 pdProfit = []
                 c_time.append(CURRENT_TIME)
-                for x in item_data:
+                for x in item():
                     for y in x:
                         name.append(y['Name'])
                         cPrice.append(y['RecentPrice'])
