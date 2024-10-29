@@ -89,59 +89,63 @@ def get_data(path):
 
 def main():
     global DATA_LIMIT
-    retry_count = 3  # 최대 3번 재시도
-    retry_delay = 60  # 재시도 간격 (초)
+    retry_count = 3
+    retry_delay = 60
 
     for attempt in range(retry_count):
         try:
             hour = datetime.now().hour
-            # print(hour,DATA_LIMIT,type(hour))
-            if (hour == 2)&DATA_LIMIT:
-                DATA_LIMIT=False
+            if (hour == 2) & DATA_LIMIT:
+                DATA_LIMIT = False
                 set_today_data_recoding()
-            elif (hour == 3)&(not DATA_LIMIT):
-                DATA_LIMIT=True
+            elif (hour == 3) & (not DATA_LIMIT):
+                DATA_LIMIT = True
 
             item_data = item()
             if item_data[0] == -1:
-                # print("오류")
+                ERROR.append(item_data[1])
                 return item_data[1]
             else:
-                name = []
-                cPrice = []
-                c_time = []
-                yPrice = []
-                pdProfit = []
-                c_time.append(CURRENT_TIME)
-                for x in item():
-                    for y in x:
-                        name.append(y['Name'])
-                        cPrice.append(y['RecentPrice'])
-                        yPrice.append(y['YDayAvgPrice'])
-                        pdProfit.append(y['RecentPrice']/y['YDayAvgPrice']*100)
-                body = {
-                    'values': [
-                        name,
-                        cPrice,
-                        yPrice,
-                        pdProfit,
-                        c_time
-                    ]
-                }
-                insert_data('데이터!B1',body)
+                data_body = prepare_data_body(item_data)
+                insert_data('데이터!B1', data_body)
                 return "connect and execute"
 
         except Exception as e:
             if attempt < retry_count - 1:
-                time.sleep(retry_delay)  # 재시도 전 대기 시간
-                continue  # 다시 시도
+                time.sleep(retry_delay)
+                continue
             else:
                 return f"Error after {retry_count} attempts: {e}"
+
+def prepare_data_body(item_data):
+    name = []
+    cPrice = []
+    yPrice = []
+    pdProfit = []
+    for category in item_data:
+        for entry in category:
+            name.append(entry.get('Name', 'N/A'))
+            cPrice.append(entry.get('RecentPrice', 0))
+            yPrice.append(entry.get('YDayAvgPrice', 0))
+            pdProfit.append(entry.get('RecentPrice', 0) / max(entry.get('YDayAvgPrice', 1), 1) * 100)
+
+    return {
+        'values': [
+            name,
+            cPrice,
+            yPrice,
+            pdProfit,
+            [CURRENT_TIME]
+        ]
+    }
+
+def app():
+    return main()
 
 def update_message():
     global CURRENT_TIME
     CURRENT_TIME = time.strftime('%Y-%m-%d %H:%M:%S')
-    response = main()
+    response = app()
     new_message = f"갱신된 시간: {CURRENT_TIME} \n서버 상태: {response} \n"
     MESSAGE.insert(0, new_message)
 
