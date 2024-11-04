@@ -20,7 +20,7 @@ CURRENT_TIME = ""
 DATA_LIMIT = True
 MINUTE_LIMIT = [True, 0]
 
-def set_ten_minute_union_values():
+def set_half_hour_union_values():
     global CURRENT_TIME
     data = get_data('데이터!AE2:AH2')
     lens = get_data('통계!S:T')
@@ -98,8 +98,8 @@ def set_today_data_recoding():
     set_life_earn_values()
     set_today_union_values()
 
-def set_ten_minute_data_recoding():
-    set_ten_minute_union_values()
+def set_half_hour_data_recoding():
+    set_half_hour_union_values()
 
 def get_keyfile_path(filename):
     if getattr(sys, 'frozen', False):
@@ -144,10 +144,10 @@ def main():
                 DATA_LIMIT = True
 
             if MINUTE_LIMIT[0]:
-                set_ten_minute_data_recoding()
+                set_half_hour_data_recoding()
                 MINUTE_LIMIT = [False,minute]
                 # print(f'run{MINUTE_LIMIT}')
-            elif MINUTE_LIMIT[0] == False and (minute % 10 == 0) and (not (minute / 10 == MINUTE_LIMIT[1] / 10)):
+            elif MINUTE_LIMIT[0] == False and (minute % 30 == 0) and (not (minute / 30 == MINUTE_LIMIT[1] / 30)):
                 MINUTE_LIMIT[0] = True
                 # print(f"cold time is back{MINUTE_LIMIT}")
 
