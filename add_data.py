@@ -129,8 +129,6 @@ def main():
             elif MINUTE_LIMIT[0] == False and (minute % 10 == 0) and (not (minute / 10 == MINUTE_LIMIT[1] / 10)):
                 MINUTE_LIMIT[0] = True
                 # print(f"cold time is back{MINUTE_LIMIT}")
-            else:
-                # print(f"still cool time {MINUTE_LIMIT}")
 
             item_data = item()
             if item_data[0] == -1:
