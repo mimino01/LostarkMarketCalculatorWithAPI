@@ -20,7 +20,7 @@ CURRENT_TIME = ""
 DATA_LIMIT = True
 MINUTE_LIMIT = [True, 0]
 
-def set_union_value():
+def set_ten_minute_union_values():
     global CURRENT_TIME
     data = get_data('데이터!AE2:AH2')
     lens = get_data('통계!S:T')
@@ -37,7 +37,7 @@ def set_union_value():
     }
     insert_data(f'통계!S{len(lens)+1}',body)
 
-def set_all_stuff_values():
+def set_today_stuff_values():
     values = get_data('통계!A:E')
     today = date.today().strftime("%m/%d")
     if not values:
@@ -76,9 +76,30 @@ def set_life_earn_values():
         }
         insert_data(f'생활계산기!BL{len(values)+1}',body)
 
+def set_today_union_values():
+    data = get_data('데이터!AE3:AH3')
+    lens = get_data('통계!Y:Z')
+    today = date.today().strftime("%m/%d")
+    body = {
+        'values': [
+            [
+                today,
+                data[0][0],
+                data[0][2],
+                data[0][3],
+                data[0][1]
+            ]
+        ]
+    }
+    insert_data(f'통계!Y{len(lens)+1}',body)
+
 def set_today_data_recoding():
-    set_all_stuff_values()
+    set_today_stuff_values()
     set_life_earn_values()
+    set_today_union_values()
+
+def set_ten_minute_data_recoding():
+    set_ten_minute_union_values()
 
 def get_keyfile_path(filename):
     if getattr(sys, 'frozen', False):
@@ -123,7 +144,7 @@ def main():
                 DATA_LIMIT = True
 
             if MINUTE_LIMIT[0]:
-                set_union_value()
+                set_ten_minute_data_recoding()
                 MINUTE_LIMIT = [False,minute]
                 # print(f'run{MINUTE_LIMIT}')
             elif MINUTE_LIMIT[0] == False and (minute % 10 == 0) and (not (minute / 10 == MINUTE_LIMIT[1] / 10)):
@@ -176,17 +197,7 @@ def app():
     # return testMain()
 
 def testMain():
-    global MINUTE_LIMIT
-    minute = datetime.now().minute
-    if MINUTE_LIMIT[0]:
-        set_union_value()
-        MINUTE_LIMIT = [False,minute]
-        print(f'run{MINUTE_LIMIT}')
-    elif MINUTE_LIMIT[0] == False and (minute % 10 == 0) and (not (minute / 10 == MINUTE_LIMIT[1] / 10)):
-        MINUTE_LIMIT[0] = True
-        print(f"cold time is back{MINUTE_LIMIT}")
-    else:
-        print(f"still cool time {MINUTE_LIMIT}")
+    set_today_union_values()
 
 
 def update_message():
