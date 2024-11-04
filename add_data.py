@@ -2,6 +2,7 @@ import time
 import tkinter as tk
 import os
 import sys
+from pickle import GLOBAL
 from tokenize import Double
 from xmlrpc.client import Boolean
 
@@ -17,6 +18,24 @@ SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 SPREADSHEET_ID = '1QpKxz3ghKcjthG4j8FvOmpYmVMLaEnTrpEWef58IkF8'
 CURRENT_TIME = ""
 DATA_LIMIT = True
+MINUTE_LIMIT = [True, 0]
+
+def set_union_value():
+    global CURRENT_TIME
+    data = get_data('데이터!AE2:AH2')
+    lens = get_data('통계!S:T')
+    body = {
+        'values': [
+            [
+                CURRENT_TIME,
+                data[0][0],
+                data[0][2],
+                data[0][3],
+                data[0][1]
+            ]
+        ]
+    }
+    insert_data(f'통계!S{len(lens)+1}',body)
 
 def set_all_stuff_values():
     values = get_data('통계!A:E')
@@ -89,17 +108,29 @@ def get_data(path):
 
 def main():
     global DATA_LIMIT
+    global MINUTE_LIMIT
     retry_count = 3
     retry_delay = 60
 
     for attempt in range(retry_count):
         try:
             hour = datetime.now().hour
+            minute = datetime.now().minute
             if (hour == 2) & DATA_LIMIT:
                 DATA_LIMIT = False
                 set_today_data_recoding()
             elif (hour == 3) & (not DATA_LIMIT):
                 DATA_LIMIT = True
+
+            if MINUTE_LIMIT[0]:
+                set_union_value()
+                MINUTE_LIMIT = [False,minute]
+                # print(f'run{MINUTE_LIMIT}')
+            elif MINUTE_LIMIT[0] == False and (minute % 10 == 0) and (not (minute / 10 == MINUTE_LIMIT[1] / 10)):
+                MINUTE_LIMIT[0] = True
+                # print(f"cold time is back{MINUTE_LIMIT}")
+            else:
+                # print(f"still cool time {MINUTE_LIMIT}")
 
             item_data = item()
             if item_data[0] == -1:
@@ -126,8 +157,11 @@ def prepare_data_body(item_data):
         for entry in category:
             name.append(entry.get('Name', 'N/A'))
             cPrice.append(entry.get('RecentPrice', 0))
-            yPrice.append(entry.get('YDayAvgPrice', 0))
             pdProfit.append(entry.get('RecentPrice', 0) / max(entry.get('YDayAvgPrice', 1), 1) * 100)
+            if entry.get('YDayAvgPrice') == 0:
+                yPrice.append(entry.get('RecentPrice', 0))
+            else:
+                yPrice.append(entry.get('YDayAvgPrice', 0))
 
     return {
         'values': [
@@ -141,6 +175,21 @@ def prepare_data_body(item_data):
 
 def app():
     return main()
+    # return testMain()
+
+def testMain():
+    global MINUTE_LIMIT
+    minute = datetime.now().minute
+    if MINUTE_LIMIT[0]:
+        set_union_value()
+        MINUTE_LIMIT = [False,minute]
+        print(f'run{MINUTE_LIMIT}')
+    elif MINUTE_LIMIT[0] == False and (minute % 10 == 0) and (not (minute / 10 == MINUTE_LIMIT[1] / 10)):
+        MINUTE_LIMIT[0] = True
+        print(f"cold time is back{MINUTE_LIMIT}")
+    else:
+        print(f"still cool time {MINUTE_LIMIT}")
+
 
 def update_message():
     global CURRENT_TIME
