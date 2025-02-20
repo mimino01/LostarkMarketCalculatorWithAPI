@@ -223,27 +223,40 @@ if __name__ == '__main__':
     root = tk.Tk()
     root.title("데이터 갱신")
 
+    # 창 크기에 따라 가변적으로 조정
+    root.rowconfigure(0, weight=1)
+    root.columnconfigure(0, weight=1)
+
     frame = tk.Frame(root)
-    frame.pack(padx=10, pady=10)
+    frame.grid(row=0, column=0, sticky="nsew", padx=10, pady=10)
 
     # 수직 스크롤바 생성
     scrollbar_y = tk.Scrollbar(frame, orient="vertical")
-    scrollbar_y.grid(row = 0, column = 1, sticky="ns")
+    scrollbar_y.grid(row=0, column=1, sticky="ns")
 
     # 메시지를 표시할 Text 위젯 생성
     message_text = tk.Text(frame, wrap="word", yscrollcommand=scrollbar_y.set, height=15, width=50)
-    message_text.grid(row = 0, column = 0)
+    message_text.grid(row=0, column=0, sticky="nsew")
 
     # 스크롤바와 Text 위젯 연동
     scrollbar_y.config(command=message_text.yview)
 
+    # 오류 메시지 표시를 위한 Text와 스크롤바 생성
     scrollbar_error = tk.Scrollbar(frame, orient="vertical")
-    scrollbar_error.grid(row = 1, column = 1, sticky="ns")
+    scrollbar_error.grid(row=1, column=1, sticky="ns")
 
     error_text = tk.Text(frame, wrap="word", yscrollcommand=scrollbar_error.set, height=10, width=50)
-    error_text.grid(row = 1, column = 0)
+    error_text.grid(row=1, column=0, sticky="nsew")
 
+    # 스크롤바와 오류 메시지 Text 연동
     scrollbar_error.config(command=error_text.yview)
 
+    # 가변 크기 설정
+    frame.rowconfigure(0, weight=3)  # 메시지 텍스트 부분 가중치
+    frame.rowconfigure(1, weight=1)  # 오류 메시지 부분 가중치
+    frame.columnconfigure(0, weight=1)
+
+    # update_message 함수 호출 예시
     update_message()
+
     root.mainloop()
